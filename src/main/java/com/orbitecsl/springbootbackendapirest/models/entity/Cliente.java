@@ -17,6 +17,11 @@ public class Cliente implements Serializable {
      @Temporal(TemporalType.DATE)  //para transformar la fecha de java a la fecha de mysql
      private Date createAt;
 
+     @PrePersist
+     public void prePersist(){
+         this.createAt= new Date();
+     }
+
     public Long getId() {
         return id;
     }
