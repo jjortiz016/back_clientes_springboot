@@ -31,7 +31,6 @@ public class ClienteRestController {
          return iClienteService.save(cliente);
 
     }
-
     @PutMapping("/clientes/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente update(@RequestBody Cliente cliente, @PathVariable Long id){
@@ -47,8 +46,4 @@ public class ClienteRestController {
     public void delete(@PathVariable Long id){
          iClienteService.delete(id);
     }
-
-
-
-
 }

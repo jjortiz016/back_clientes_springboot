@@ -33,7 +33,7 @@ public class ClienteServiceImple implements IClienteService{
     @Override
     @Transactional
     public void delete(Long id) {
-        iRepositoryClienteDao.findById(id);
+        iRepositoryClienteDao.deleteById(id);
 
     }
 }
