@@ -1,6 +1,7 @@
 package com.orbitecsl.springbootbackendapirest.models.entity;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 @Entity
@@ -10,8 +11,11 @@ public class Cliente implements Serializable {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
      private Long id;
+
+     @Column(nullable=false)
      private String nombre;
      private String apellido;
+    @Column(nullable=false, unique=true)
      private String email;
      @Column(name="create_at")
      @Temporal(TemporalType.DATE)  //para transformar la fecha de java a la fecha de mysql

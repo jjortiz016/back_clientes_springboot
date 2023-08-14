@@ -45,20 +45,50 @@ public class ClienteRestController {
     }
 
     @PostMapping("/clientes")
-    @ResponseStatus(HttpStatus.CREATED)  //201 QUE FUE CREADO
-    public Cliente create(@RequestBody Cliente cliente){
+    public ResponseEntity<?> create(@RequestBody Cliente cliente){
 
-         return iClienteService.save(cliente);
+          Cliente clienteNew=  null;
 
+          Map<String, Object> response= new HashMap<>();
+
+          try{
+              clienteNew=iClienteService.save(cliente);
+
+          }catch (DataAccessException e){
+              response.put("mensaje","Error al realizar el insert  en la base de datos");
+              response.put("error", e.getMessage().concat(" :").concat(e.getMostSpecificCause().getMessage()));
+              return new ResponseEntity< Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
+          }
+         response.put("mensaje","El cliente ha sido creado con exito");
+          response.put("cliente",clienteNew);
+         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
     @PutMapping("/clientes/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Cliente update(@RequestBody Cliente cliente, @PathVariable Long id){
-         Cliente clienteActual= iClienteService.findById(id);
-         clienteActual.setNombre(cliente.getNombre());
-         clienteActual.setApellido(cliente.getApellido());
-         clienteActual.setEmail(cliente.getEmail());
-          return iClienteService.save(clienteActual);
+    public ResponseEntity<?> update(@RequestBody Cliente cliente, @PathVariable Long id){
+        Cliente clienteActual=iClienteService.findById(id);
+        Cliente clienteUpdated= null;
+        Map<String, Object> response= new HashMap<>();
+
+         if(clienteActual==null){
+             response.put("mensaje", "El cliente ID:".concat(id.toString().concat(" No existe en la base de datos")));
+             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+         }
+        try{
+            clienteActual.setNombre(cliente.getNombre());
+            clienteActual.setApellido(cliente.getApellido());
+            clienteActual.setEmail(cliente.getEmail());
+            clienteActual.setCreateAt(cliente.getCreateAt());
+            clienteUpdated= iClienteService.save(clienteActual);
+        }catch (DataAccessException e){
+            response.put("mensaje","Error al actualizar el registro del cliente");
+            response.put("error", e.getMessage().concat(" :").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<Map<String, Object>>( response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+         response.put("mensaje","El cliente ha sido actualizado con exito");
+         response.put("cliente",clienteActual);
+          return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/clientes/{id}")
