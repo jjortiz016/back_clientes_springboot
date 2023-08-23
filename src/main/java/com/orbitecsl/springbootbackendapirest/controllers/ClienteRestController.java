@@ -26,7 +26,7 @@ public class ClienteRestController {
 
     @GetMapping("clientes/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){  //<?> tipo generic
-        Cliente cliente= null;
+            Cliente cliente= null;
         Map<String, Object> response = new HashMap<>();
          try {  // controlas si hay un error con la base de datos..
              cliente=  iClienteService.findById(id);
