@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +49,23 @@ public class ClienteRestController {
     }
 
     @PostMapping("/clientes")
-    public ResponseEntity<?> create(@RequestBody Cliente cliente){
+    public ResponseEntity<?> create(@Valid @RequestBody Cliente cliente, BindingResult result){
 
           Cliente clienteNew=  null;
 
           Map<String, Object> response= new HashMap<>();
+
+          if(result.hasErrors()){
+              List<String> errors = new ArrayList<>();
+              for(FieldError err: result.getFieldErrors()){
+                  errors.add("El campo '"+ err.getField()+"' "+err.getDefaultMessage());
+              }
+              response.put("errors", errors);
+              return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+          }
+
+
+
 
           try{
               clienteNew=iClienteService.save(cliente);
