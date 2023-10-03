@@ -118,6 +118,7 @@ public class ClienteRestController {
             clienteActual.setNombre(cliente.getNombre());
             clienteActual.setApellido(cliente.getApellido());
             clienteActual.setEmail(cliente.getEmail());
+            clienteActual.setNacimiento(cliente.getNacimiento());
             clienteActual.setCreateAt(cliente.getCreateAt());
             clienteUpdated= iClienteService.save(clienteActual);
         }catch (DataAccessException e){
