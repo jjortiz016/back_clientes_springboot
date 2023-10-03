@@ -26,6 +26,12 @@ public class Cliente implements Serializable {
     @Email(message="El email digitado no es una dirección bien formada!")
     @Column(nullable=false, unique=true)
      private String email;
+
+    @NotNull(message= "No puede estar vacio")
+    @Column(name="nacimiento")
+    @Temporal(TemporalType.DATE)
+    private Date nacimiento;
+
      @Column(name="create_at")
      @Temporal(TemporalType.DATE)  //para transformar la fecha de java a la fecha de mysql
      private Date createAt;
@@ -65,6 +71,13 @@ public class Cliente implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Date getNacimiento() {
+        return nacimiento;
+    }
+    public void setNacimiento(Date nacimiento) {
+        this.nacimiento = nacimiento;
     }
 
     public Date getCreateAt() {
