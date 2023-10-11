@@ -31,6 +31,8 @@ public class Cliente implements Serializable {
     @Column(name="nacimiento")
     @Temporal(TemporalType.DATE)
     private Date nacimiento;
+    @Column(name="foto")
+    private String foto;
 
      @Column(name="create_at")
      @Temporal(TemporalType.DATE)  //para transformar la fecha de java a la fecha de mysql
@@ -86,5 +88,26 @@ public class Cliente implements Serializable {
 
     public void setCreateAt(Date createAt) {
         this.createAt = createAt;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", email='" + email + '\'' +
+                ", nacimiento=" + nacimiento +
+                ", foto='" + foto + '\'' +
+                ", createAt=" + createAt +
+                '}';
     }
 }

@@ -12,8 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -145,5 +150,31 @@ public class ClienteRestController {
          response.put("mensaje","El cliente eliminado con éxitor!");
          return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
+    }
+
+    @PostMapping("/clientes/upload")
+    public ResponseEntity<?> upload(@RequestParam("archivo")MultipartFile archivo, @RequestParam("id") Long id){
+         Map<String, Object> response = new HashMap<>();
+         Cliente cliente = iClienteService.findById(id);
+
+         if(!archivo.isEmpty()){
+             String nombreArchivo = archivo.getOriginalFilename();
+             Path rutaArchivo= Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath();
+             try{
+                 Files.copy(archivo.getInputStream(),rutaArchivo);
+             }catch (IOException e){
+                 response.put("mensaje","Error al subir la imagen del cliente " + nombreArchivo);
+                 response.put("error", e.getMessage().concat(": ").concat(e.getCause().getMessage()));
+
+                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
+             }
+             cliente.setFoto(nombreArchivo);
+             iClienteService.save(cliente);
+             response.put("cliente", cliente);
+             response.put("mensaje", "Has subido correctamente la imagen!!"+ nombreArchivo);
+         }
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 }
