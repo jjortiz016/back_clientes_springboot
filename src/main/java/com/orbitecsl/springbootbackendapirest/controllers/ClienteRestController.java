@@ -10,11 +10,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -138,6 +139,17 @@ public class ClienteRestController {
     public ResponseEntity<?> delete(@PathVariable Long id){
          Map<String, Object> response = new HashMap<>();
          try{
+             Cliente cliente = iClienteService.findById(id);
+             String nombreFotoAnterior= cliente.getFoto();
+
+             if(nombreFotoAnterior != null && nombreFotoAnterior.length()>0){
+                 Path rutaFotoAnterior= Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
+                 File archivoFotoAnterior = rutaFotoAnterior.toFile();
+                 if(archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()){
+                     archivoFotoAnterior.delete();
+                 }
+
+             }
              iClienteService.delete(id);
          }catch (DataAccessException e){
              response.put("mensaje","Error al eliminar el registro del cliente");
@@ -166,6 +178,17 @@ public class ClienteRestController {
                  return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 
              }
+             String nombreFotoAnterior= cliente.getFoto();
+
+             if(nombreFotoAnterior != null && nombreFotoAnterior.length()>0){
+                 Path rutaFotoAnterior= Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
+                 File archivoFotoAnterior = rutaFotoAnterior.toFile();
+                 if(archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()){
+                     archivoFotoAnterior.delete();
+                 }
+
+             }
+
              cliente.setFoto(nombreArchivo);
              iClienteService.save(cliente);
              response.put("cliente", cliente);
