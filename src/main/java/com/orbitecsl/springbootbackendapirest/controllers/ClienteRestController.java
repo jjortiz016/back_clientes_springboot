@@ -3,21 +3,28 @@ package com.orbitecsl.springbootbackendapirest.controllers;
 import com.orbitecsl.springbootbackendapirest.models.entity.Cliente;
 import com.orbitecsl.springbootbackendapirest.models.services.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins={"http://localhost:4200/"})
@@ -136,6 +143,17 @@ public class ClienteRestController {
     public ResponseEntity<?> delete(@PathVariable Long id){
          Map<String, Object> response = new HashMap<>();
          try{
+             Cliente cliente = iClienteService.findById(id);
+             String nombreFotoAnterior= cliente.getFoto();
+
+             if(nombreFotoAnterior != null && nombreFotoAnterior.length()>0){
+                 Path rutaFotoAnterior= Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
+                 File archivoFotoAnterior = rutaFotoAnterior.toFile();
+                 if(archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()){
+                     archivoFotoAnterior.delete();
+                 }
+
+             }
              iClienteService.delete(id);
          }catch (DataAccessException e){
              response.put("mensaje","Error al eliminar el registro del cliente");
@@ -146,4 +164,60 @@ public class ClienteRestController {
          return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 
     }
+
+    @PostMapping("/clientes/upload")
+    public ResponseEntity<?> upload(@RequestParam("archivo")MultipartFile archivo, @RequestParam("id") Long id){
+         Map<String, Object> response = new HashMap<>();
+         Cliente cliente = iClienteService.findById(id);
+
+         if(!archivo.isEmpty()){
+             String nombreArchivo = UUID.randomUUID().toString() + "_"+ archivo.getOriginalFilename().replace(" ","");
+             Path rutaArchivo= Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath();
+             try{
+                 Files.copy(archivo.getInputStream(),rutaArchivo);
+             }catch (IOException e){
+                 response.put("mensaje","Error al subir la imagen del cliente " + nombreArchivo);
+                 response.put("error", e.getMessage().concat(": ").concat(e.getCause().getMessage()));
+
+                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
+             }
+             String nombreFotoAnterior= cliente.getFoto();
+
+             if(nombreFotoAnterior != null && nombreFotoAnterior.length()>0){
+                 Path rutaFotoAnterior= Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
+                 File archivoFotoAnterior = rutaFotoAnterior.toFile();
+                 if(archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()){
+                     archivoFotoAnterior.delete();
+                 }
+
+             }
+
+             cliente.setFoto(nombreArchivo);
+             iClienteService.save(cliente);
+             response.put("cliente", cliente);
+             response.put("mensaje", "Has subido correctamente la imagen!!"+ nombreArchivo);
+         }
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/uploads/img/{nombreFoto:.+}") //los 2 puntos mas el punto y mas + son para indicar que biene con una extensión.
+    public ResponseEntity<Resource> verFoto(@PathVariable String nombreFoto){
+         Path rutaArchivo = Paths.get("uploads").resolve(nombreFoto).toAbsolutePath();
+         Resource recurso = null;
+          try{
+              recurso = new UrlResource(rutaArchivo.toUri());
+          }catch (MalformedURLException e){
+              e.printStackTrace();
+          }
+          if(!recurso.exists() && !recurso.isReadable()) {
+              throw new RuntimeException("Error no se pudo cargar la imagen: " + nombreFoto);
+          }
+              HttpHeaders cabecera = new HttpHeaders();
+              cabecera.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename()+ "\"");
+             return  new ResponseEntity<Resource>(recurso, cabecera, HttpStatus.OK);
+    }
+
+
 }
