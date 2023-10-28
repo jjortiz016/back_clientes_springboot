@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/vehiculos")
+@RequestMapping("/api2")
 public class VehiculoRestController {
-    @Autowired
+   @Autowired
     private IVehiculoService iVehiculoService;
 
-    @GetMapping("/index")
+    @GetMapping("/vehiculos")
     public List<Vehiculo> index(){
         return iVehiculoService.findAll();
+
     }
 
 }
