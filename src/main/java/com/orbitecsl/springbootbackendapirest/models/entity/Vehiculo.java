@@ -5,15 +5,20 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table (name="clientes")
+@Table (name="vehiculos")
 public class Vehiculo implements Serializable {
     private static final long serialVersionUID= 1L;
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(length = 30, nullable=false, unique=true)
     private String placa;
+    @Column(length = 40)
     private String marca;
+    @Column(length = 40)
     private String color;
+    @Column(length = 40)
     private String tipo;
 
     @Column(name= "create_at")
