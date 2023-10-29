@@ -3,10 +3,7 @@ package com.orbitecsl.springbootbackendapirest.controllers;
 import com.orbitecsl.springbootbackendapirest.models.entity.Vehiculo;
 import com.orbitecsl.springbootbackendapirest.models.services.IVehiculoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @CrossOrigin(origins={"http://localhost:4200/"})
@@ -19,7 +16,11 @@ public class VehiculoRestController {
     @GetMapping("/vehiculos")
     public List<Vehiculo> index(){
         return iVehiculoService.findAll();
+    }
 
+    @GetMapping("/clientes/{id)")
+    public Vehiculo show (){
+        return null;
     }
 
 }

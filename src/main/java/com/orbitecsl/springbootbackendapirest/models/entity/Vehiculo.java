@@ -25,6 +25,10 @@ public class Vehiculo implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date createAt;
 
+    @PrePersist
+    public void prepersist(){
+        this.createAt= new Date();
+    }
     public long getId() {
         return id;
     }
