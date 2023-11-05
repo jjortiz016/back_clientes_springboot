@@ -16,7 +16,7 @@ public class VehiculoServiceImple implements IVehiculoService {
     IRepositoryVehiculoDao iRepositoryVehiculoDao;
 
 
-    @Override
+   @Override
     @Transactional(readOnly = true)
     public List<Vehiculo> findAll() {
        return (List<Vehiculo>) iRepositoryVehiculoDao.findAll();
@@ -36,6 +36,6 @@ public class VehiculoServiceImple implements IVehiculoService {
 
     @Override
     public void delete(Long id) {
-       iRepositoryVehiculoDao.findById(id);
+       iRepositoryVehiculoDao.deleteById(id);
     }
 }
