@@ -45,7 +45,6 @@ public class VehiculoRestController {
     }
 
     @PostMapping("/vehiculos")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@RequestBody Vehiculo vehiculo){
         Vehiculo vehiculoNew= null;
         Map<String, Object> response= new HashMap<>();
@@ -63,14 +62,30 @@ public class VehiculoRestController {
     }
 
     @PutMapping("/vehiculos/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Vehiculo update(@RequestBody Vehiculo vehiculo, @PathVariable Long id){
+    public ResponseEntity<?> update(@RequestBody Vehiculo vehiculo, @PathVariable Long id){
         Vehiculo vehiculoActual= iVehiculoService.findById(id);
-        vehiculoActual.setPlaca(vehiculo.getPlaca());
-        vehiculoActual.setMarca(vehiculo.getMarca());
-        vehiculoActual.setColor(vehiculo.getColor());
-        vehiculoActual.setTipo(vehiculo.getTipo());
-        return iVehiculoService.save(vehiculoActual);
+        Vehiculo vehiculoUpdated= null;
+        Map<String, Object> response = new HashMap<>();
+        if(vehiculoActual==null){
+            response.put("mensaje"," El vehiculo ID: ".concat(id.toString().concat(" No existe en la base de datos.")));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+        try{
+            vehiculoActual.setPlaca(vehiculo.getPlaca());
+            vehiculoActual.setMarca(vehiculo.getMarca());
+            vehiculoActual.setColor(vehiculo.getColor());
+            vehiculoActual.setTipo(vehiculo.getTipo());
+            vehiculoUpdated= iVehiculoService.save(vehiculoActual);
+
+        }catch(DataAccessException e){
+            response.put("mensaje", "Error al realizar el update en la base de datos");
+            response.put("error", e.getMessage().concat(" :").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("mensaje", "El vehiculo ha sido actualizado con exito!!");
+        response.put("vehiculo", vehiculoActual);
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
     @DeleteMapping("/vehiculos/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
