@@ -88,9 +88,17 @@ public class VehiculoRestController {
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
     @DeleteMapping("/vehiculos/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id){
-        iVehiculoService.delete(id);
+    public ResponseEntity<?> delete(@PathVariable Long id){
+        Map<String, Object> response = new HashMap<>();
+        try{
+            iVehiculoService.delete(id);
+        }catch(DataAccessException e){
+            response.put("mensaje", "Error al eliminar el registro del vehiculo");
+            response.put("error", e.getMessage().concat(" :").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("mensaje", "El vehiculo fue eliminado con exito!!");
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
