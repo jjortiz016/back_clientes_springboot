@@ -46,11 +46,20 @@ public class VehiculoRestController {
 
     @PostMapping("/vehiculos")
     @ResponseStatus(HttpStatus.CREATED)
-    public Vehiculo create(@RequestBody Vehiculo vehiculo){
+    public ResponseEntity<?> create(@RequestBody Vehiculo vehiculo){
+        Vehiculo vehiculoNew= null;
+        Map<String, Object> response= new HashMap<>();
 
-
-
-        return iVehiculoService.save(vehiculo);
+        try{
+            vehiculoNew=iVehiculoService.save(vehiculo);
+        }catch (DataAccessException e){
+            response.put("mensaje", "Error al realizar el insert en la base de datos");
+            response.put("error", e.getMessage().concat(" :").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("mensaje","El vehiculo ha sido creado con exito");
+        response.put("vehiculo", vehiculo);
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("/vehiculos/{id}")

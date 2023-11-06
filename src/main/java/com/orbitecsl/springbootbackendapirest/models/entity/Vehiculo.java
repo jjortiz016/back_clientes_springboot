@@ -17,8 +17,9 @@ public class Vehiculo implements Serializable {
     @Column(length = 40)
     private String marca;
     @Column(length = 40)
+
     private String color;
-    @Column(length = 40)
+    @Column(length = 45, nullable = false)
     private String tipo;
 
     @Column(name= "create_at")
