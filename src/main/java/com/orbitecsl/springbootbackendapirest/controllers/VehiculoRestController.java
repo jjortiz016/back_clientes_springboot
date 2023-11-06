@@ -6,11 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins={"http://localhost:4200/"})
 @RestController
@@ -45,9 +50,18 @@ public class VehiculoRestController {
     }
 
     @PostMapping("/vehiculos")
-    public ResponseEntity<?> create(@RequestBody Vehiculo vehiculo){
+    public ResponseEntity<?> create(@Valid @RequestBody Vehiculo vehiculo, BindingResult result){
         Vehiculo vehiculoNew= null;
         Map<String, Object> response= new HashMap<>();
+         if(result.hasErrors()){
+             List<String> errors = new ArrayList<>();
+             for(FieldError err: result.getFieldErrors()){
+                errors.add("El campo '"+ err.getField()+"' "+err.getDefaultMessage());
+             }
+             response.put("errors", errors);
+             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+         }
+
 
         try{
             vehiculoNew=iVehiculoService.save(vehiculo);
@@ -62,10 +76,19 @@ public class VehiculoRestController {
     }
 
     @PutMapping("/vehiculos/{id}")
-    public ResponseEntity<?> update(@RequestBody Vehiculo vehiculo, @PathVariable Long id){
+    public ResponseEntity<?> update(@Valid @RequestBody Vehiculo vehiculo, BindingResult result, @PathVariable Long id){
         Vehiculo vehiculoActual= iVehiculoService.findById(id);
         Vehiculo vehiculoUpdated= null;
         Map<String, Object> response = new HashMap<>();
+         if(result.hasErrors()){
+             List <String> errors= result.getFieldErrors()
+                     .stream()
+                     .map(err -> "El campo '"+ err.getField()+"' "+err.getDefaultMessage())
+                     .collect(Collectors.toList());
+             response.put("errors", errors);
+             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+         }
+
         if(vehiculoActual==null){
             response.put("mensaje"," El vehiculo ID: ".concat(id.toString().concat(" No existe en la base de datos.")));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);

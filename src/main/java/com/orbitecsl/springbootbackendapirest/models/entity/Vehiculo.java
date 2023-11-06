@@ -1,6 +1,8 @@
 package com.orbitecsl.springbootbackendapirest.models.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,13 +14,20 @@ public class Vehiculo implements Serializable {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotEmpty
+    @Size(min=4, max=30)
     @Column(length = 30, nullable=false, unique=true)
     private String placa;
+    @Size(max=40)
     @Column(length = 40)
     private String marca;
+
+    @Size(max=40)
     @Column(length = 40)
 
     private String color;
+    @NotEmpty
+    @Size(max=45)
     @Column(length = 45, nullable = false)
     private String tipo;
 
