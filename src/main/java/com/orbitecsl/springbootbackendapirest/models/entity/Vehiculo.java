@@ -14,20 +14,19 @@ public class Vehiculo implements Serializable {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotEmpty
-    @Size(min=4, max=30)
+    @NotEmpty(message= " no puede estar vacio.")
+    @Size(min=4, max=6, message= " debe tener entre 4 y 6 caracteres.")
     @Column(length = 30, nullable=false, unique=true)
     private String placa;
-    @Size(max=40)
+    @Size(max=40, message = " no debe superar los 40 caracteres.")
     @Column(length = 40)
     private String marca;
 
-    @Size(max=40)
+    @Size(max=40, message = " no debe superar los 40 caracteres.")
     @Column(length = 40)
-
     private String color;
-    @NotEmpty
-    @Size(max=45)
+    @NotEmpty(message= " no puede estar vacio.")
+    @Size(max=45, message = " no debe superar los 45 caracteres.")
     @Column(length = 45, nullable = false)
     private String tipo;
 
