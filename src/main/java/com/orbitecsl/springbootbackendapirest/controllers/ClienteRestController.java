@@ -2,6 +2,7 @@ package com.orbitecsl.springbootbackendapirest.controllers;
 
 import com.orbitecsl.springbootbackendapirest.models.entity.Cliente;
 import com.orbitecsl.springbootbackendapirest.models.services.IClienteService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -16,6 +17,8 @@ import org.springframework.validation.BindingResult;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import java.io.File;
@@ -31,6 +34,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api")
 public class ClienteRestController {
+    private static final Logger log = LoggerFactory.getLogger(ClienteRestController.class);
      @Autowired
      private IClienteService iClienteService;
 
@@ -212,7 +216,14 @@ public class ClienteRestController {
               e.printStackTrace();
           }
           if(!recurso.exists() && !recurso.isReadable()) {
-              throw new RuntimeException("Error no se pudo cargar la imagen: " + nombreFoto);
+              rutaArchivo = Paths.get("src/main/resources/static/images").resolve("no-user.png").toAbsolutePath();
+              try{
+                  recurso = new UrlResource(rutaArchivo.toUri());
+              }catch (MalformedURLException e){
+                  e.printStackTrace();
+              }
+
+              log.error("Error no se pudo cargar la imagen: " + nombreFoto);
           }
               HttpHeaders cabecera = new HttpHeaders();
               cabecera.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename()+ "\"");
