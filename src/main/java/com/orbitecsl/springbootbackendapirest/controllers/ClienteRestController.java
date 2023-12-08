@@ -1,6 +1,7 @@
 package com.orbitecsl.springbootbackendapirest.controllers;
 
 import com.orbitecsl.springbootbackendapirest.models.entity.Cliente;
+import com.orbitecsl.springbootbackendapirest.models.entity.Region;
 import com.orbitecsl.springbootbackendapirest.models.services.IClienteService;
 
 import com.orbitecsl.springbootbackendapirest.models.services.IUploadFileService;
@@ -133,6 +134,8 @@ public class ClienteRestController {
             clienteActual.setEmail(cliente.getEmail());
             clienteActual.setNacimiento(cliente.getNacimiento());
             clienteActual.setCreateAt(cliente.getCreateAt());
+            clienteActual.setRegion(cliente.getRegion());
+
             clienteUpdated= iClienteService.save(clienteActual);
         }catch (DataAccessException e){
             response.put("mensaje","Error al actualizar el registro del cliente");
@@ -206,5 +209,9 @@ public class ClienteRestController {
              return  new ResponseEntity<Resource>(recurso, cabecera, HttpStatus.OK);
     }
 
+    @GetMapping ("/clientes/regiones")
+    public List<Region> listarRegiones(){
+         return iClienteService.findAllRegiones();
+    }
 
 }

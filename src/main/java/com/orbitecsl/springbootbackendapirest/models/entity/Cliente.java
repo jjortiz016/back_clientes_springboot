@@ -36,10 +36,10 @@ public class Cliente implements Serializable {
     @Column(name="foto")
     private String foto;
 
-
+    @NotNull(message = "La región no puede ser vacia.")
     @ManyToOne(fetch=FetchType.LAZY) // peresoza se carga cuando se llame el atributo
     @JoinColumn(name="region_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //para que no genere error en el json
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //ignorar atributos hibernate para que no genere error en el json
     private Region region;
      @Column(name="create_at")
      @Temporal(TemporalType.DATE)  //para transformar la fecha de java a la fecha de mysql
