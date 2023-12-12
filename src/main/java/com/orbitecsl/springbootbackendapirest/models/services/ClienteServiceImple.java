@@ -1,6 +1,7 @@
 package com.orbitecsl.springbootbackendapirest.models.services;
 import com.orbitecsl.springbootbackendapirest.models.dao.IRepositoryClienteDao;
 import com.orbitecsl.springbootbackendapirest.models.entity.Cliente;
+import com.orbitecsl.springbootbackendapirest.models.entity.Region;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +44,12 @@ public class ClienteServiceImple implements IClienteService{
     public void delete(Long id) {
         iRepositoryClienteDao.deleteById(id);
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Region> findAllRegiones() {
+        return iRepositoryClienteDao.findAllRegiones();
     }
 
 }
