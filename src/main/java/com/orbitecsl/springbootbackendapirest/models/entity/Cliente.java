@@ -1,5 +1,7 @@
 package com.orbitecsl.springbootbackendapirest.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -34,9 +36,16 @@ public class Cliente implements Serializable {
     @Column(name="foto")
     private String foto;
 
+    @NotNull(message = "La región no puede ser vacia.")
+    @ManyToOne(fetch=FetchType.LAZY) // peresoza se carga cuando se llame el atributo
+    @JoinColumn(name="region_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) //ignorar atributos hibernate para que no genere error en el json
+    private Region region;
      @Column(name="create_at")
      @Temporal(TemporalType.DATE)  //para transformar la fecha de java a la fecha de mysql
      private Date createAt;
+
+
 
      @PrePersist
      public void prePersist(){
@@ -96,6 +105,14 @@ public class Cliente implements Serializable {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
     @Override

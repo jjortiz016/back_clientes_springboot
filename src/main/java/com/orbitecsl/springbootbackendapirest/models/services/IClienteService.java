@@ -1,6 +1,7 @@
 package com.orbitecsl.springbootbackendapirest.models.services;
 
 import com.orbitecsl.springbootbackendapirest.models.entity.Cliente;
+import com.orbitecsl.springbootbackendapirest.models.entity.Region;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,5 +14,6 @@ public interface IClienteService {
     public Page<Cliente> findAll(Pageable peageable);
     public Cliente save(Cliente cliente);
     public void delete(Long id);
+    public List<Region> findAllRegiones();
 
 }
