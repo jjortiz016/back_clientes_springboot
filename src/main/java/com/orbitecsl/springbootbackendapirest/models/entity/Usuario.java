@@ -21,7 +21,8 @@ public class Usuario implements Serializable {
 
     @ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL) //CascadeType.All para cuando elimine el usuario se elimine los roles relacionados, o cuando se creo el usuairo se cree el role
     //si queremso cambiar el nombre de la tabla intermedia
-    @JoinTable(name="users_authorities", joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="role_id"))
+    @JoinTable(name="users_authorities", joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns=@JoinColumn(name="role_id"),
+    uniqueConstraints = {@UniqueConstraint(columnNames={"user_id", "role_id"})})
     private List<Role> roles;
 
     private static final long serialVersionUID = 1L;
