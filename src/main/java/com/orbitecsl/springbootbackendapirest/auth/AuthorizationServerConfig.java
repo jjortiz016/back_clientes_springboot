@@ -33,7 +33,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
        security.tokenKeyAccess("permitAll()") //damos permiso para dar acceso a cualquier usuario anonimo o no
-               .checkTokenAccess("isAuthenticated"); //valida el token que se esta enviando
+               .checkTokenAccess("isAuthenticated()"); //valida el token que se esta enviando
+
     }
 
     @Override
