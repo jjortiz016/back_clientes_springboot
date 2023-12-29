@@ -1,5 +1,7 @@
 package com.orbitecsl.springbootbackendapirest.models.entity;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -18,6 +20,13 @@ public class Usuario implements Serializable {
     private String password;
 
     private Boolean enabled;
+
+    @Column(length = 45)
+    private String nombre;
+    @Column(length = 45)
+    private String apellido;
+    @Column(unique = true)
+    private String email;
 
     @ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL) //CascadeType.All para cuando elimine el usuario se elimine los roles relacionados, o cuando se creo el usuairo se cree el role
     //si queremso cambiar el nombre de la tabla intermedia
@@ -57,6 +66,31 @@ public class Usuario implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Role> getRoles() {
