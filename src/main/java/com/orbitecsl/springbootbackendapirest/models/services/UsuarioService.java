@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UsuarioService implements UserDetailsService {
+public class UsuarioService implements IUsuarioService, UserDetailsService {
     private Logger logger = LoggerFactory.getLogger(UsuarioService.class);
     @Autowired
     private IUsuarioDao iUsuarioDao;
@@ -40,5 +40,10 @@ public class UsuarioService implements UserDetailsService {
                 .collect(Collectors.toList());
         return new User(usuario.getUsername(), usuario.getPassword(), usuario.getEnabled(),
                 true, true, true, authorities);
+    }
+
+    @Override
+    public Usuario findByUsername(String username) {
+        return iUsuarioDao.findByUsername(username);
     }
 }
