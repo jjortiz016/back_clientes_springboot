@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins={"http://localhost:4200/"})
 @RestController
-@RequestMapping("/api2")
+@RequestMapping("/api")
 public class VehiculoRestController {
    @Autowired
     private IVehiculoService iVehiculoService;
