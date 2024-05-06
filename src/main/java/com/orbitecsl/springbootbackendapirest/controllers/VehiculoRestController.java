@@ -131,7 +131,7 @@ public class VehiculoRestController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("mensaje", "El vehiculo fue eliminado con exito!!");
-        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
 
