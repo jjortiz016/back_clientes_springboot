@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins={"http://localhost:4200/"})
 @RestController
-@RequestMapping("/api2")
+@RequestMapping("/api")
 public class VehiculoRestController {
    @Autowired
     private IVehiculoService iVehiculoService;
@@ -131,7 +131,7 @@ public class VehiculoRestController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("mensaje", "El vehiculo fue eliminado con exito!!");
-        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
 
