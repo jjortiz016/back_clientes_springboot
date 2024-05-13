@@ -39,7 +39,7 @@ public class VehiculoRestController {
 
     }
 
-    @GetMapping("/vehiculos/{id}")
+    @GetMapping({"/vehiculos/{id}","/vehiculos/ver/{id}"})
     public ResponseEntity<?> show (@PathVariable Long id){
         Vehiculo vehiculo=null;
         Map<String, Object> response= new HashMap<>();

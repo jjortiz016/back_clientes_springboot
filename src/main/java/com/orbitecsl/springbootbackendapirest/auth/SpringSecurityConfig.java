@@ -42,7 +42,5 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); //se desactivan las sesiones ya que se maneja por el token
-
-
     }
 }

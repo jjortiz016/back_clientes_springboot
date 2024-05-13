@@ -25,10 +25,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/clientes","/api/clientes/page/**", "/api/vehiculos ", "/api/vehiculos/page/**", "/api/uploads/img/**").permitAll() //, "/images/**" se quito esta linea por que no se identifico la ruta
                 .antMatchers(HttpMethod.POST, "/api/clientes" ).hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/vehiculos/ver/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/clientes/**" ).hasRole("ADMIN")
                 .antMatchers("/api/vehiculos/**" ).hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/clientes/{id}", "/api/vehiculos/{id}" ).hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/clientes/upload", "/api/vehiculos/upload" ).hasAnyRole("USER", "ADMIN")
+
+                .antMatchers(HttpMethod.GET, "/api/clientes/{id}", "/api/vehiculos/{id}").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/clientes/upload").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and().cors().configurationSource(corsConfigurationSource());
 
