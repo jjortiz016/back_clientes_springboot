@@ -23,7 +23,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/clientes","/api/clientes/page/**", "/api/vehiculos ", "/api/vehiculos/page/**", "/api/uploads/img/**").permitAll() //, "/images/**" se quito esta linea por que no se identifico la ruta
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/clientes","/api/clientes/page/**", "/api/vehiculos ", "/api/vehiculos/page/**", "/api/uploads/img/**","/images/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/clientes" ).hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/vehiculos/ver/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/clientes/**" ).hasRole("ADMIN")
